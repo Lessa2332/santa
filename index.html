@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
   <title>✉️ Лист Санті | SmartLessa</title>
+
+  <!-- ✅ Favicon (base64 прозорий 1x1 піксель — запобігає 404) -->
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" />
+
+  <!-- ✅ A-Frame має бути першим у <head> -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -148,22 +155,20 @@
 <body>
   <!-- AR Scene -->
   <div id="ar-container" style="display:none;">
+    <!-- ✅ Видалено renderer="..." — він конфліктував -->
     <a-scene 
       mindar-image="imageTargetSrc: markers/santa-letter.mind; maxTrack=1;"
-      renderer="colorManagement: true; physicallyCorrectLights: true;"
       vr-mode-ui="enabled: false"
       device-orientation-permission-ui="enabled: false"
-      arjs
     >
       <a-assets>
-        <img id="photo-preview" src="" crossorigin="anonymous" />
+        <img id="photo-preview" crossorigin="anonymous" />
         <audio id="send-sound" src="audio/send-chime.mp3"></audio>
       </a-assets>
 
       <a-entity mindar-image-target="targetIndex: 0">
         <a-entity id="ar-content" visible="false">
           <a-entity particle-system="preset: dust; color: #ffdd44,#ffffff; particleCount: 200; size: 0.05;"></a-entity>
-          <a-plane position="0 0 0" width="0.8" height="0.1" color="#00000000" opacity="0"></a-plane>
         </a-entity>
       </a-entity>
 
@@ -203,8 +208,7 @@
     </div>
   </div>
 
-  <!-- External libraries -->
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <!-- ✅ Бібліотеки після A-Frame, але до нашого коду -->
   <script src="https://cdn.jsdelivr.net/npm/mindar-image@1.1.13/dist/mindar-image.prod.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -224,7 +228,6 @@
       });
     });
 
-    // UI refs
     const instruction = document.getElementById('instruction');
     const photoUI = document.getElementById('photo-ui');
     const magicUI = document.getElementById('magic-ui');
@@ -233,13 +236,11 @@
     const sendBtn = document.getElementById('send-btn');
     const previewContainer = document.getElementById('photo-preview-container');
 
-    // Start AR
     startBtn.addEventListener('click', () => {
       instruction.style.display = 'none';
       document.getElementById('ar-container').style.display = 'block';
     });
 
-    // Target found → show photo UI
     document.addEventListener('mindar-image-targetFound', (e) => {
       if (e.detail.index === 0) {
         document.getElementById('ar-content').setAttribute('visible', 'true');
@@ -250,7 +251,6 @@
       }
     });
 
-    // Capture photo
     captureBtn.addEventListener('click', async () => {
       try {
         const video = document.createElement('video');
@@ -281,7 +281,6 @@
       }
     });
 
-    // Send magic
     sendBtn.addEventListener('click', () => {
       photoUI.style.display = 'none';
       magicUI.style.display = 'block';
